@@ -59,7 +59,9 @@ abstract class AbstractPdoAdapter extends AbstractAdapter
         try {
             return $this->_pdo->query($query);
         } catch (\PDOException $e) {
-            throw new AdapterException($e->getMessage(), $e->getCode());
+            // 将字符串错误代码转换为整数
+            $code = is_numeric($e->getCode()) ? (int)$e->getCode() : 0;
+            throw new AdapterException($e->getMessage(), $code);
         }
     }
 
@@ -109,7 +111,7 @@ abstract class AbstractPdoAdapter extends AbstractAdapter
     {
         return $handle->rowCount();
     }
-    
+
     /**
      * lastInsertId 
      * 
